@@ -1,0 +1,221 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+
+    <!--- basic page needs
+    ================================================== -->
+    <meta charset="utf-8">
+    <title>Add Post | PurpleOreo</title>
+
+    <!-- mobile specific metas
+    ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- CSS
+    ================================================== -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/vendor.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+    <!-- script
+    ================================================== -->
+    <script src="{% static 'js/modernizr.js' %}"></script>
+    <script src="{% static 'js/pace.min.js' %}"></script>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+</head>
+
+<body id="top">
+
+    <!-- pageheader
+    ================================================== -->
+    <div class="s-pageheader">
+
+        <header class="header">
+            <div class="header__content row">
+
+                <div class="header__logo">
+                    <a class="logo" href="/">
+                        <img src="{% static 'images/logo.png' %}" style="size: 100px;" alt="Homepage">
+                    </a>
+                </div> <!-- end header__logo -->
+
+                <ul class="header__social">
+                    <li><a href="https://instagram.com/devdesignz.inc"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                    <li><a href="https://facebook.com"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                    <li><a href="https://twitter.com"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                    <li><a href="https://pinterest.com"><i class="fa fa-pinterest" aria-hidden="true"></i></a></li>
+                </ul> <!-- end header__social -->
+
+                <a class="header__search-trigger" href="#0"></a>
+
+                <div class="header__search">
+
+                    <form role="search" method="get" class="header__search-form" action="#">
+                        <label>
+                            <span class="hide-content">Search for:</span>
+                            <input type="search" class="search-field" placeholder="Type Keywords" value="" name="s" title="Search for:" autocomplete="off">
+                        </label>
+                        <input type="submit" class="search-submit" value="Search">
+                    </form>
+        
+                    <a href="#0" title="Close Search" class="header__overlay-close">Close</a>
+
+                </div>  <!-- end header__search -->
+
+
+                <a class="header__toggle-menu" href="#" title="Menu"><span>Menu</span></a>
+
+                <nav class="header__nav-wrap">
+
+                    <h2 class="header__nav-heading h6">Site Navigation</h2>
+
+                    <ul class="header__nav">
+                        <li><a href="/">Home</a></li>
+                        {% if user.is_authenticated %}
+                            {% if user.is_superuser %}
+                            <li><a href="/admin/">Admin Dashboard</a></li>
+                            {% endif %}
+                        <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                        <li class="current"><a href="{% url 'add-post' %}">Add Post</a></li>
+                        <li><a href="{% url 'logout' %}">Log Out</a></li>
+                        {% else %}
+                        <li><a href="{% url 'register' %}" title="">Sign Up</a></li>
+                        <li><a href="{% url 'login' %}" title="">Log In</a></li>
+                        {% endif %}
+                    </ul> <!-- end header__nav -->
+
+                    <a href="#" title="Close Menu" class="header__overlay-close close-mobile-menu">Close</a>
+
+                </nav> <!-- end header__nav-wrap -->
+            </div> <!-- header-content -->
+        </header> <!-- header -->
+
+    </div> <!-- end s-pageheader -->
+
+
+    <!-- s-content
+    ================================================== -->
+    <section class="s-content s-content--narrow">
+
+        <div class="row">
+
+            {% if user.is_authenticated %}
+            <div class="s-content__header col-full">
+
+                <h1 class="s-content__header-title">
+                    Share Your Thoughts Or Stories
+                </h1>
+
+            </div> <!-- end s-content__header -->
+            <div class="col-full s-content__main">
+
+                <p class="lead" style="text-align: justify;">Remember when you were a kid and said what you thought without hesitating? We’ll get you back there. And if that was never you, now it can be.</p>
+                
+                <p style="text-align: justify;">We would love to hear the stories of your happiest moments or even make your heart lighter by sharing some of your thoughts with us. PurpleOreo is an entirely safe place to express whatever you want. The best part about PurpleOreo is that you can choose to stay anonymous.
+                </p>
+
+
+                <h3>Please be kind and respectful while uploading a post</h3>
+
+                <form name="cForm" id="cForm" method="post" action="">
+                    {% csrf_token %}
+                    <fieldset>
+                        {{form.as_p}}
+                        <button type="submit" class="submit btn btn--primary">Submit</button>
+                        <a class="btn btn--primary" href="/">Cancel</a>
+
+                    </fieldset>
+                </form> <!-- end form -->
+
+                <script>
+                    var name = "{{user.id}}";
+                    document.getElementById("user").value = name;
+                </script>
+
+
+            </div> <!-- end s-content__main -->
+
+            {% else %}
+            <div class="s-content__header col-full">
+                <h1 class="s-content__header-title">You Need To Log In First</h1>
+            </div> <!-- end s-content__header -->
+            {% endif %}
+            
+
+        </div> <!-- end row -->
+
+    </section> <!-- s-content -->
+
+    <!-- s-footer
+    ================================================== -->
+    <footer class="s-footer">
+
+        <div class="s-footer__main">
+            <div class="row">
+
+                <div class="col-five md-full end s-footer__subscribe">
+                        
+                    <h4>About PurpleOreo</h4>
+
+                    <p>PurpleOreo is an entirely safe place to express whatever you want. Remember when you were a kid and said what you thought without hesitating? We’ll get you back there. And if that was never you, now it can be.</p>
+
+
+                </div> <!-- end s-footer__subscribe -->
+                <div class="col-five md-full end s-footer__subscribe">
+                        
+                    <h4>Stay Anonymous</h4>
+                    <p>We would love to hear the stories of your happiest moments or even make your heart lighter by sharing some of your thoughts with us. The best part about PurpleOreo is that you can choose to stay anonymous.</p>
+                </div> <!-- end s-footer__subscribe -->
+
+            </div>
+        </div> <!-- end s-footer__main -->
+
+        <div class="s-footer__bottom">
+            <div class="row">
+                <div class="col-full">
+                    <div class="s-footer__copyright">
+                        <span>Copyright © 2022 All rights reserved</span> 
+                        <span>Made With <svg viewBox="0 0 1792 1792" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="height: 0.8rem;"><path d="M896 1664q-26 0-44-18l-624-602q-10-8-27.5-26T145 952.5 77 855 23.5 734 0 596q0-220 127-344t351-124q62 0 126.5 21.5t120 58T820 276t76 68q36-36 76-68t95.5-68.5 120-58T1314 128q224 0 351 124t127 344q0 221-229 450l-623 600q-18 18-44 18z" fill="#e25555"></path></svg> by <a href="https://devdesignz.com/">DevDesignZ</a>
+                    </div>
+
+                    <div class="go-top">
+                        <a class="smoothscroll" title="Back to Top" href="#top"></a>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- end s-footer__bottom -->
+
+    </footer> <!-- end s-footer -->
+
+
+    <!-- preloader
+    ================================================== -->
+    <div id="preloader">
+        <div id="loader">
+            <div class="line-scale">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Java Script
+    ================================================== -->
+    <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'js/plugins.js' %}"></script>
+    <script src="https://maps.googleapis.com/maps/api/js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+
+</html>

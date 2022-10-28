@@ -1,0 +1,244 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+
+    <!--- basic page needs
+    ================================================== -->
+    <meta charset="utf-8">
+    <title>PurpleOreo | A Safe Place To Share Your Thoughts & Stories</title>
+
+    <!-- mobile specific metas
+    ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- CSS
+    ================================================== -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/vendor.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+    <!-- script
+    ================================================== -->
+    <script src="{% static 'js/modernizr.js' %}"></script>
+    <script src="{% static 'js/pace.min.js' %}"></script>
+
+    <!-- favicons
+    ================================================== -->
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+
+</head>
+
+<body id="top">
+
+    <!-- pageheader
+    ================================================== -->
+    <section class="s-pageheader s-pageheader--home">
+
+        <header class="header">
+            <div class="header__content row">
+
+                <div class="header__logo">
+                    <a class="logo" href="/">
+                        <img src="{% static 'images/logo.png' %}" style="size: 100px;" alt="PurpleOrea">
+                    </a>
+                </div> <!-- end header__logo -->
+
+                <ul class="header__social">
+                    <li><a href="https://instagram.com/devdesignz.inc"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                    <li><a href="https://facebook.com"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                    <li><a href="https://twitter.com"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                    <li><a href="https://pinterest.com"><i class="fa fa-pinterest" aria-hidden="true"></i></a></li>
+                </ul> <!-- end header__social -->
+
+                <a class="header__search-trigger" href="#0"></a>
+
+                <div class="header__search">
+
+                    <form role="search" method="get" class="header__search-form" action="#">
+                        <label>
+                            <span class="hide-content">Search for:</span>
+                            <input type="search" class="search-field" placeholder="Type Keywords" value="" name="s" title="Search for:" autocomplete="off">
+                        </label>
+                        <input type="submit" class="search-submit" value="Search">
+                    </form>
+        
+                    <a href="#0" title="Close Search" class="header__overlay-close">Close</a>
+
+                </div>  <!-- end header__search -->
+
+
+                <a class="header__toggle-menu" href="#" title="Menu"><span>Menu</span></a>
+
+                <nav class="header__nav-wrap">
+
+                    <h2 class="header__nav-heading h6">Site Navigation</h2>
+
+                    <ul class="header__nav">
+                        <li class="current"><a href="/">Home</a></li>
+                        {% if user.is_authenticated %}
+                            {% if user.is_superuser %}
+                            <li><a href="/admin/">Admin Dashboard</a></li>
+                            {% endif %}
+                        <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                        <li><a href="{% url 'add-post' %}">Add Post</a></li>
+                        <li><a href="{% url 'logout' %}">Log Out</a></li>
+                        {% else %}
+                        <li><a href="{% url 'register' %}" title="">Sign Up</a></li>
+                        <li><a href="{% url 'login' %}" title="">Log In</a></li>
+                        {% endif %}
+                    </ul> <!-- end header__nav -->
+
+                    <a href="#" title="Close Menu" class="header__overlay-close close-mobile-menu">Close</a>
+
+                </nav> <!-- end header__nav-wrap -->
+            </div> <!-- header-content -->
+        </header> <!-- header -->
+    </section> <!-- end s-pageheader -->
+
+
+    <!-- s-content
+    ================================================== -->
+    <section class="s-content">
+        
+        <div class="row masonry-wrap">
+            <div class="masonry">
+
+                <div class="grid-sizer"></div>
+
+                {% for post in object_list %}
+
+                {% if post.short_story %}
+                <article class="masonry__brick entry format-standard" data-aos="fade-up">
+    
+                    <div class="entry__text"  style="padding-bottom: 7.5px; padding-top: 40px;">
+                        <div class="entry__header">
+                            <h1 class="entry__title"><a>{{post.confess}}</a></h1>
+                        </div>
+                        <div class="entry__excerpt">
+                            <p>{{post.short_story}}</p>
+                            <p style="text-align: center; padding-right: 9%;">
+                                {% if post.stay_hidden %}
+                                <cite>~ Anonymous</cite>
+                                {% else %}
+                                <cite>~ {{post.author.first_name}}</cite>
+                                {% endif %}
+                            </p>
+                            {% if user.id == post.author.id %}
+                            <hr>
+                            <div class="entry__meta"  style="text-align: center;  padding-right: 9%; padding-bottom: 15px; padding-top: 15px;">
+                                <span class="entry__meta-links">
+                                    <a href="{% url 'edit-post' post.slug %}">Edit</a> 
+                                </span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+    
+                </article> <!-- end article -->
+
+                {% else %}
+                <article class="masonry__brick entry format-quote" data-aos="fade-up">    
+                    <div class="entry__thumb" style="padding-bottom: 0px;">
+                        <blockquote>
+                                <p>{{post.confess}}</p>
+                                {% if post.stay_hidden %}
+                                <cite>~ Anonymous</cite>
+                                {% else %}
+                                <cite>~ {{post.author.first_name}}</cite>
+                                {% endif %}
+                                {% if post.confess|length > 50 %}<br>{% endif %}
+                        </blockquote>
+                    </div>
+                    {% if user.id == post.author.id %}
+                    <div class= "entry__text entry__meta">
+                        <span class="entry__meta-links">
+                            <a href="{% url 'edit-post' post.slug %}">Edit</a> 
+                        </span>
+                    </div>   
+                    {% endif %}
+                </article> <!-- end article -->
+                {% endif %}
+
+                {% endfor %}
+                
+
+            </div> <!-- end masonry -->
+        </div> <!-- end masonry-wrap -->
+
+
+    </section> <!-- s-content -->
+
+    <!-- s-footer
+    ================================================== -->
+    <footer class="s-footer">
+
+        <div class="s-footer__main">
+            <div class="row">
+
+                <div class="col-five md-full end s-footer__subscribe">
+                        
+                    <h4>About PurpleOreo</h4>
+
+                    <p>PurpleOreo is an entirely safe place to express whatever you want. Remember when you were a kid and said what you thought without hesitating? We’ll get you back there. And if that was never you, now it can be.</p>
+
+
+                </div> <!-- end s-footer__subscribe -->
+                <div class="col-five md-full end s-footer__subscribe">
+                        
+                    <h4>Stay Anonymous</h4>
+                    <p>We would love to hear the stories of your happiest moments or even make your heart lighter by sharing some of your thoughts with us. The best part about PurpleOreo is that you can choose to stay anonymous.</p>
+                </div> <!-- end s-footer__subscribe -->
+
+            </div>
+        </div> <!-- end s-footer__main -->
+
+        <div class="s-footer__bottom">
+            <div class="row">
+                <div class="col-full">
+                    <div class="s-footer__copyright">
+                        <span>Copyright © 2022 All rights reserved</span> 
+                        <span>Made With <svg viewBox="0 0 1792 1792" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="height: 0.8rem;"><path d="M896 1664q-26 0-44-18l-624-602q-10-8-27.5-26T145 952.5 77 855 23.5 734 0 596q0-220 127-344t351-124q62 0 126.5 21.5t120 58T820 276t76 68q36-36 76-68t95.5-68.5 120-58T1314 128q224 0 351 124t127 344q0 221-229 450l-623 600q-18 18-44 18z" fill="#e25555"></path></svg> by <a href="https://devdesignz.com/">DevDesignZ</a>
+                    </div>
+
+                    <div class="go-top">
+                        <a class="smoothscroll" title="Back to Top" href="#top"></a>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- end s-footer__bottom -->
+
+    </footer> <!-- end s-footer -->
+
+
+    <!-- preloader
+    ================================================== -->
+    <div id="preloader">
+        <div id="loader">
+            <div class="line-scale">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Java Script
+    ================================================== -->
+    <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'js/plugins.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+
+</html>
